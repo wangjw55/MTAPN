@@ -8,9 +8,11 @@ from d2l import torch as d2l
 class ABasicMAC:
     def __init__(self, scheme, groups, args):
         self.n_agents = args.n_agents
+        # 加入actions num
         self.n_actions = args.n_actions
         self.args = args
         input_shape = self._get_input_shape(scheme)
+        # 初始化agent
         self._build_agents(input_shape)
         self.agent_output_type = args.agent_output_type
 
@@ -84,15 +86,14 @@ class ABasicMAC:
         model_dict.update(pretrained_dict)
         self.agent.load_state_dict(model_dict)
         
+        # 将决策层设置为不进行梯度更新，如果微调决策层需要删除
         if self.args.fix_policy_para:
-            print('Use pre-trained DecL and fix')
             for k,v in self.agent.named_parameters():
                 if k in ['fc2.weight', 'fc2.bias']:
                     v.requires_grad = False
 
     def _build_agents(self, input_shape):
         # self.agent = agent_REGISTRY[self.args.agent](input_shape, self.args)
-
         self.devices = d2l.try_all_gpus()
         self.agent = DataParallel(agent_REGISTRY[self.args.agent](input_shape, self.args), device_ids=self.devices)
 
@@ -112,8 +113,6 @@ class ABasicMAC:
         if self.args.obs_agent_id:
             inputs.append(th.eye(self.n_agents, device=batch.device).unsqueeze(0).expand(bs, -1, -1).unsqueeze(2).expand(-1, -1, self.n_actions, -1))
         
-        # （batch_size, agent_num, action_num）
-        # -> （batch_size, agent_num, action_num, action_num）
         all_actions = th.eye(self.n_actions, device=batch.device).unsqueeze(0).unsqueeze(0).expand(bs, self.n_agents, -1, -1)
         inputs.append(all_actions)
         

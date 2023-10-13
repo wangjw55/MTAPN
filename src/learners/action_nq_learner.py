@@ -22,7 +22,6 @@ class ANQLearner:
             self.params = list(mac.parameters())
         else:
             self.params, self.params_old = mac.divide_parameters()
-            print('Use pre-trained DecL and fine-tune')
 
         if args.mixer == "qatten":
             self.mixer = QattenMixer(args)
@@ -38,7 +37,6 @@ class ANQLearner:
         print('Mixer Size: ')
         print(get_parameters_num(self.mixer.parameters()))
 
-        # 定义optimiser
         if self.args.optimizer == 'adam':
             self.optimiser = Adam(params=self.params,  lr=args.lr, weight_decay=getattr(args, "weight_decay", 0))
             if not self.args.fix_policy_para and self.args.use_pretain_policy:
