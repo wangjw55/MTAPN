@@ -6,41 +6,43 @@ import torch.nn.init as init
 from utils.th_utils import orthogonal_init_
 from torch.nn import LayerNorm
 
-class NRNNAgent(nn.Module):
+class PerceiveAgent(nn.Module):
     def __init__(self, input_shape, args):
-        super(NRNNAgent, self).__init__()
+        super(PerceiveAgent, self).__init__()
         self.args = args
 
         self.fc1 = nn.Linear(input_shape, args.rnn_hidden_dim)
         self.rnn = nn.GRUCell(args.rnn_hidden_dim, args.rnn_hidden_dim)
-        self.fc2 = nn.Linear(args.rnn_hidden_dim, args.n_actions)
 
         if getattr(args, "use_layer_norm", False):
             self.layer_norm = LayerNorm(args.rnn_hidden_dim)
         
         if getattr(args, "use_orthogonal", False):
             orthogonal_init_(self.fc1)
-            orthogonal_init_(self.fc2, gain=args.gain)
 
     def init_hidden(self):
         # make hidden states on same device as model
         return self.fc1.weight.new(1, self.args.rnn_hidden_dim).zero_()
 
     def forward(self, inputs, hidden_state):
-        # b是8或者128,对应了两个batch size,8是运行size开8个环境，128是采样训练size，每次取出来128个样本
-        # a应该是agent nums,我方单位数量，
-        # e是input_shape，应该可以理解为对输入的embedding size
-        b, a, e = inputs.size()
-        # print(b, a, e)
+        # (batch_size, agent_num, action_num, embedding_size)
+        b, a, actions_num, e = inputs.size()
 
-        inputs = inputs.view(-1, e)
-        x = F.relu(self.fc1(inputs), inplace=True)
+        # inputs = inputs.view(-1, actions_num, e)
+        # h_in = hidden_state.reshape(-1, self.args.rnn_hidden_dim)
+        # hh_ = []
+        # for k in range(actions_num):
+        #     inputs_ = inputs[:,k,:].squeeze()
+        #     x = F.relu(self.fc1(inputs_), inplace=True)
+        #     hh = self.rnn(x, h_in)
+        #     hh_.append(hh)
+        # hh = th.stack(hh_, dim=2).reshape(-1, self.args.rnn_hidden_dim)
+
+        inputs = inputs.reshape(-1, e)
+        hidden_state = hidden_state.unsqueeze(2).expand(-1, -1, actions_num, -1)
         h_in = hidden_state.reshape(-1, self.args.rnn_hidden_dim)
+        x = F.relu(self.fc1(inputs), inplace=True)
         hh = self.rnn(x, h_in)
+        hh = hh.reshape(-1, self.args.rnn_hidden_dim)
 
-        if getattr(self.args, "use_layer_norm", False):
-            q = self.fc2(self.layer_norm(hh))
-        else:
-            q = self.fc2(hh)
-
-        return q.view(b, a, -1), hh.view(b, a, -1)
+        return hh, b, a, actions_num

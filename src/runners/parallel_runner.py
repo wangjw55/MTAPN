@@ -14,6 +14,8 @@ class ParallelRunner:
         self.args = args
         self.logger = logger
         self.batch_size = self.args.batch_size_run
+        self.map_id = args.env_args['map_id']
+        self.battle_won = 0
 
         # Make subprocesses for the envs
         self.parent_conns, self.worker_conns = zip(*[Pipe() for _ in range(self.batch_size)])
@@ -102,10 +104,10 @@ class ParallelRunner:
             # Pass the entire batch of experiences up till now to the agents
             # Receive the actions for each agent at this timestep in a batch for each un-terminated env
             if save_probs:
-                actions, probs = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, bs=envs_not_terminated, test_mode=test_mode)
+                actions, probs = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, bs=envs_not_terminated, test_mode=test_mode, map_id=self.map_id)
             else:
-                actions = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, bs=envs_not_terminated, test_mode=test_mode)
-                
+                actions = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, bs=envs_not_terminated, test_mode=test_mode, map_id=self.map_id)
+
             cpu_actions = actions.to("cpu").numpy()
 
             # Update the actions taken
@@ -205,8 +207,8 @@ class ParallelRunner:
             self._log(cur_returns, cur_stats, log_prefix)
         elif self.t_env - self.log_train_stats_t >= self.args.runner_log_interval:
             self._log(cur_returns, cur_stats, log_prefix)
-            if hasattr(self.mac.action_selector, "epsilon"):
-                self.logger.log_stat("epsilon", self.mac.action_selector.epsilon, self.t_env)
+            if hasattr(self.mac.action_selector_dict[self.map_id], "epsilon"):
+                self.logger.log_stat("epsilon", self.mac.action_selector_dict[self.map_id].epsilon, self.t_env)
             self.log_train_stats_t = self.t_env
 
         return self.batch
@@ -219,6 +221,8 @@ class ParallelRunner:
         for k, v in stats.items():
             if k != "n_episodes":
                 self.logger.log_stat(prefix + k + "_mean" , v/stats["n_episodes"], self.t_env)
+                if k == "battle_won":
+                    self.battle_won = v/stats["n_episodes"]
         stats.clear()
 
 

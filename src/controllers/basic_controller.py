@@ -9,6 +9,7 @@ class BasicMAC:
         self.n_agents = args.n_agents
         self.args = args
         input_shape = self._get_input_shape(scheme)
+        # 初始化agent
         self._build_agents(input_shape)
         self.agent_output_type = args.agent_output_type
 
@@ -75,16 +76,22 @@ class BasicMAC:
         inputs.append(batch["obs"][:, t])  # b1av
         if self.args.obs_last_action:
             if t == 0:
+                # 在t=0时拼接一个actions形状的空向量
+                # 这里调用了t时刻的actions onehot，这个变量是现成的***
                 inputs.append(th.zeros_like(batch["actions_onehot"][:, t]))
             else:
+                # 在t非0时拼接上一时刻的actions向量
                 inputs.append(batch["actions_onehot"][:, t-1])
         if self.args.obs_agent_id:
+            # 将（1,n_agents，n_agents）扩展到（bs，n_agents，n_agents），就是复制了bs遍
             inputs.append(th.eye(self.n_agents, device=batch.device).unsqueeze(0).expand(bs, -1, -1))
         
+        # 将所有inputs reshape为bs，n_agents，-1）然后拼接在一起
         inputs = th.cat([x.reshape(bs, self.n_agents, -1) for x in inputs], dim=-1)
         return inputs
 
     def _get_input_shape(self, scheme):
+        # rnn的输入shape定义，obs + onehot action + agent id
         input_shape = scheme["obs"]["vshape"]
         if self.args.obs_last_action:
             input_shape += scheme["actions_onehot"]["vshape"][0]

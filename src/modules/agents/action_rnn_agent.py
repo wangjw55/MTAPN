@@ -14,14 +14,7 @@ class ARNNAgent(nn.Module):
 
         self.fc1 = nn.Linear(input_shape, args.rnn_hidden_dim)
         self.rnn = nn.GRUCell(args.rnn_hidden_dim, args.rnn_hidden_dim)
-        # 输出改为1维，每次输出一个action对应的Q值
         self.fc2 = nn.Linear(args.rnn_hidden_dim, 1)
-        # self.fc2 = nn.Sequential(
-        #     nn.Linear(args.rnn_hidden_dim, args.rnn_hidden_dim//2),
-        #     nn.ReLU(),
-        #     nn.Linear(args.rnn_hidden_dim//2, 1)
-        #     )
-
 
         if getattr(args, "use_layer_norm", False):
             self.layer_norm = LayerNorm(args.rnn_hidden_dim)

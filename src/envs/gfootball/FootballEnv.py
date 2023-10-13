@@ -10,6 +10,7 @@ class GoogleFootballEnv(MultiAgentEnv):
 
     def __init__(
         self,
+        map_id=0,
         dense_reward=False,
         write_full_episode_dumps=False,
         write_goal_dumps=False,
@@ -27,6 +28,7 @@ class GoogleFootballEnv(MultiAgentEnv):
         number_of_right_players_agent_controls=0,
         seed=0,
     ):
+        self.map_id = map_id
         self.dense_reward = dense_reward
         self.write_full_episode_dumps = write_full_episode_dumps
         self.write_goal_dumps = write_goal_dumps

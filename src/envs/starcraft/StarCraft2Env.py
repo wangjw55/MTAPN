@@ -64,6 +64,7 @@ class StarCraft2Env(MultiAgentEnv):
     def __init__(
         self,
         map_name="8m",
+        map_id=0,
         step_mul=8,
         move_amount=2,
         difficulty="7",
@@ -193,6 +194,7 @@ class StarCraft2Env(MultiAgentEnv):
         """
         # Map arguments
         self.map_name = map_name
+        self.map_id = map_id
         map_params = get_map_params(self.map_name)
         self.n_agents = map_params["n_agents"]
         self.n_enemies = map_params["n_enemies"]

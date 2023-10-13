@@ -37,13 +37,23 @@ def my_main(_run, _config, _log):
     else:
         run_REGISTRY[_config['run']](_run, config, _log)
 
-def _get_config(params, arg_name, subfolder):
+def _get_config(params, arg_name, subfolder=None):
     config_name = None
     for _i, _v in enumerate(params):
         if _v.split("=")[0] == arg_name:
             config_name = _v.split("=")[1]
             del params[_i]
             break
+
+    # 返回一个map list
+    if arg_name == '--map-list':
+        map_list = config_name.split(',')
+        return {'map_list': map_list}
+    
+    # 返回一个num_agents list
+    if arg_name == '--numagents-list': 
+        numagents_list = config_name.split(',')
+        return {'numagents_list': numagents_list}
 
     if config_name is not None:
         with open(os.path.join(os.path.dirname(__file__), "config", subfolder, "{}.yaml".format(config_name)), "r") as f:
@@ -94,15 +104,25 @@ if __name__ == '__main__':
     # Load algorithm and env base configs
     env_config = _get_config(params, "--env-config", "envs")
     alg_config = _get_config(params, "--config", "algs")
+    maplist_config = _get_config(params, "--map-list")
+
+    # for grf tasks
+    # numagent_config = _get_config(params, "--numagents-list")
+    # config_dict = recursive_dict_update(config_dict, numagent_config)
+    
     # config_dict = {**config_dict, **env_config, **alg_config}
     config_dict = recursive_dict_update(config_dict, env_config)
     config_dict = recursive_dict_update(config_dict, alg_config)
+    config_dict = recursive_dict_update(config_dict, maplist_config)
 
     # now add all the config to sacred
+    # 将所有配置导入ex
     ex.add_config(config_dict)
 
     # Save to disk by default for sacred
-    map_name = parse_command(params, "env_args.map_name", config_dict['env_args']['map_name'])
+    # 结果的保存位置
+    # map_name = parse_command(params, "env_args.map_name", config_dict['env_args']['map_name'])
+    map_name = ' '.join(maplist_config['map_list'])
     algo_name = parse_command(params, "name", config_dict['name']) 
     file_obs_path = join(results_path, "sacred", map_name, algo_name)
     
