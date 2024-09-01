@@ -2,19 +2,21 @@
 The master branch is utilized for single-task training, the football branch for multi-task pre-training in the GRF environment, and the multienv branch for multi-task pre-training in the SMAC environment.
 
 ## Video
-Video a: https://youtu.be/FHK-W4hH0DA
+Video a: https://youtu.be/Ng1axoM43j8
 
-Video b: https://youtu.be/MGV8PA71x8s 
+Video b: https://youtu.be/HCamoGRcRs0
 
-Video c: https://youtu.be/E2PG1Mejf3c
+Video c: https://youtu.be/HF8Bj9lVdlI
 
-Video a shows the training performance of 3s_vs_5z in multi-task pre-training. Video b presents the performance of MMM2 when trained from scratch up to 10M steps. Video c demonstrates the performance of MMM2 when trained up to 10M steps using pre-trained DecL.
+Video d: https://youtu.be/M-0BlV-cSxE
 
-In video a, we observe that our method learns effective policies for 3s_vs_5z during multi-task pre-training. After each Stalker's attack on Zealots, they quickly retreat to avoid Zealots' counterattacks. Additionally, some Stalkers draw enemy attention while others cooperate to defeat a small group of Zealots.
+Video e: https://youtu.be/E2PG1Mejf3c
 
-In video b, the Medivac fails to adopt an evasion strategy to avoid enemy attacks, resulting in the loss of our Medivac and subsequently leaving other agents on our side unable to recover their health in time. In addition, the positioning of Marines and Marauders lacks strategy as they fail to retreat in timewhen their health is low.
+Video f: https://youtu.be/MGV8PA71x8s
 
-In video c, we observe that the agent learns some advanced policies. Marines with low health retreat in time, while those with higher health draw fire from enemy Marauders. Meanwhile, other Marines stealthily flank the enemy Marauders for surprise attacks.
+Video a shows the training performance of 27m_vs_30m in multi-task pre-training. Video b demonstrates the performance of 8m_vs_9m when trained up to 6M steps using pre-trained DecL. Video c presents the performance of 8m_vs_9m when trained from scratch up to 6M steps. In video a, all Marines position themselves effectively during the attack, focusing their firepower on a single enemy, which rapidly reduces the number of enemies. In video b, the Marines similarly adopt a concentrated fire strategy, successfully gaining a numerical advantage. However, in video c, the Marines attack two enemy Marines simultaneously. Due to their numerical disadvantage and dispersed firepower, they are ultimately defeated.
+
+Video d shows the training performance of 5m_vs_6m in multi-task pre-training. Video e demonstrates the performance of MMM2 when trained up to 10M steps using pre-trained DecL. Video f presents the performance of MMM2 when trained from scratch up to 10M steps. In video d, a Marine retreats promptly when its health is low, successfully diverting enemy fire to other teammates with higher health. In video e, the Medivac also employs a retreat strategy, ensuring the continuous recovery of the health of other agents. However, in video f, the Medivac fails to adopt an effective evasion strategy, leading to its loss and preventing the timely recovery of the health of other agents, ultimately resulting in defeat.
 
 ## Citation
 If you find this work useful, please consider citing:
