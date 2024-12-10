@@ -41,9 +41,9 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python3 src/main.py --config=avdn --env-config=sc2 
 
 |![alt text](figures/visualization_27m30m_pretrain.png)|![alt text](figures/visualization_8m9m_w_pretrain.png)|![alt text](figures/visualization_8m9m_wo_pretrain.png)|
 |:-------:|:------------------:|:-----------------:|
-|pre-trained $task_{9}$ in $Group_{2}$ [[Video a](https://youtu.be/Ng1axoM43j8)]|$task_{2}$ w pre-trained DecL at 6M steps [[Video b](https://youtu.be/HCamoGRcRs0)]|$task_{2}$ w/o pre-trained DecL at 6M steps [[Video c](https://youtu.be/HF8Bj9lVdlI)]|
+|pre-trained $task_{9}$ in $Group_{2}$ [[Video_a](https://youtu.be/Ng1axoM43j8)]|$task_{2}$ w pre-trained DecL at 6M steps [[Video_b](https://youtu.be/HCamoGRcRs0)]|$task_{2}$ w/o pre-trained DecL at 6M steps [[Video_c](https://youtu.be/HF8Bj9lVdlI)]|
 |![alt text](figures/visualization_5m6m_pretrain.png)|![alt text](figures/visualization_MMM2_w_pretrain.png)|![alt text](figures/visualization_MMM2_wo_pretrain.png)|
-|pre-trained $task_{1}$ in $Group_{1}$ [[Video d](https://youtu.be/M-0BlV-cSxE)]|$task_{7}$ w pre-trained DecL at 10M steps [[Video e](https://youtu.be/E2PG1Mejf3c)]|$task_{7}$ w/o pre-trained DecL at 10M steps [[Video f](https://youtu.be/MGV8PA71x8s)]|
+|pre-trained $task_{1}$ in $Group_{1}$ [[Video_d](https://youtu.be/M-0BlV-cSxE)]|$task_{7}$ w pre-trained DecL at 10M steps [[Video_e](https://youtu.be/E2PG1Mejf3c)]|$task_{7}$ w/o pre-trained DecL at 10M steps [[Video_f](https://youtu.be/MGV8PA71x8s)]|
 
 Video a shows the training performance of 27m_vs_30m in multi-task pre-training. Video b demonstrates the performance of 8m_vs_9m when trained up to 6M steps using pre-trained DecL. Video c presents the performance of 8m_vs_9m when trained from scratch up to 6M steps. In video a, all Marines position themselves effectively during the attack, focusing their firepower on a single enemy, which rapidly reduces the number of enemies. In video b, the Marines similarly adopt a concentrated fire strategy, successfully gaining a numerical advantage. However, in video c, the Marines attack two enemy Marines simultaneously. Due to their numerical disadvantage and dispersed firepower, they are ultimately defeated.
 
