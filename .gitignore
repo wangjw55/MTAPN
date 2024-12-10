@@ -1,6 +1,5 @@
 __pycache__/
 results/
-*.png
 *.zip
 .DS_Store
 README.md
