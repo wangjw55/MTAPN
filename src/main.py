@@ -45,12 +45,10 @@ def _get_config(params, arg_name, subfolder=None):
             del params[_i]
             break
 
-    # 返回一个map list
     if arg_name == '--map-list':
         map_list = config_name.split(',')
         return {'map_list': map_list}
     
-    # 返回一个num_agents list
     if arg_name == '--numagents-list': 
         numagents_list = config_name.split(',')
         return {'numagents_list': numagents_list}
@@ -116,11 +114,9 @@ if __name__ == '__main__':
     config_dict = recursive_dict_update(config_dict, maplist_config)
 
     # now add all the config to sacred
-    # 将所有配置导入ex
     ex.add_config(config_dict)
 
     # Save to disk by default for sacred
-    # 结果的保存位置
     # map_name = parse_command(params, "env_args.map_name", config_dict['env_args']['map_name'])
     map_name = ' '.join(maplist_config['map_list'])
     algo_name = parse_command(params, "name", config_dict['name']) 

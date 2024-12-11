@@ -27,9 +27,6 @@ class NRNNAgent(nn.Module):
         return self.fc1.weight.new(1, self.args.rnn_hidden_dim).zero_()
 
     def forward(self, inputs, hidden_state):
-        # b是8或者128,对应了两个batch size,8是运行size开8个环境，128是采样训练size，每次取出来128个样本
-        # a应该是agent nums,我方单位数量，
-        # e是input_shape，应该可以理解为对输入的embedding size
         b, a, e = inputs.size()
         # print(b, a, e)
 
