@@ -12,7 +12,6 @@ class ABasicMAC:
         self.n_actions = args.n_actions
         self.args = args
         input_shape = self._get_input_shape(scheme)
-        # 初始化agent
         self._build_agents(input_shape)
         self.agent_output_type = args.agent_output_type
 
@@ -86,7 +85,6 @@ class ABasicMAC:
         model_dict.update(pretrained_dict)
         self.agent.load_state_dict(model_dict)
         
-        # 将决策层设置为不进行梯度更新，如果微调决策层需要删除
         if self.args.fix_policy_para:
             for k,v in self.agent.named_parameters():
                 if k in ['fc2.weight', 'fc2.bias']:
