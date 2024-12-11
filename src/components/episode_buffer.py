@@ -18,8 +18,6 @@ class EpisodeBatch:
         self.max_seq_length = max_seq_length
         self.preprocess = {} if preprocess is None else preprocess
         self.device = device
-        # EpisodeBatch类对象用于存储episode的样本，
-        # EpisodeBatch中数据的维度是[batch_size, max_seq_length, *shape]
         if data is not None:
             self.data = data
         else:
@@ -211,9 +209,6 @@ class ReplayBuffer(EpisodeBatch):
         self.buffer_size = buffer_size  # same as self.batch_size but more explicit
         self.buffer_index = 0
         self.episodes_in_buffer = 0
-    # ReplayBuffer类数据的维度是[buffer_size, max_seq_length, *shape]，
-    # ReplayBuffer中episodes_in_buffer表示此时buffer中有多少个episode的有效样本，
-    # max_seq_length则表示一个episode的最大长度。
     def insert_episode_batch(self, ep_batch):
         if self.buffer_index + ep_batch.batch_size <= self.buffer_size:
             self.update(ep_batch.data.transition_data,
